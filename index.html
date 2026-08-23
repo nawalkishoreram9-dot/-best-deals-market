@@ -178,6 +178,7 @@
             <input type="text" id="searchInput" placeholder="Search products..." onkeyup="filterProducts()">
         </div>
     </header>
+
     <div class="category-bar">
         <button class="category-btn active" onclick="filterCategory('all')">All</button>
         <button class="category-btn" onclick="filterCategory('mobiles')">Mobiles</button>
@@ -186,19 +187,53 @@
         <button class="category-btn" onclick="filterCategory('fashion')">Fashion</button>
         <button class="category-btn" onclick="filterCategory('home')">Home</button>
     </div>
+
     <div class="container">
         <div id="productGrid" class="product-grid"></div>
         <div id="noProducts" class="no-products" style="display: none;">No products found.</div>
     </div>
+
     <footer>
         <p><strong>Affiliate Disclosure:</strong> As an Amazon Associate, I earn from qualifying purchases. This site contains affiliate links to products on Amazon.in. If you click through and make a purchase, I may receive a small commission at no additional cost to you.</p>
         <p style="margin-top: 10px;">© 2026 Deal Hub India. All product images and trademarks belong to their respective owners.</p>
     </footer>
+
     <script>
         const sheetId = '1fg3c7h-iTdR_EwEB5fbEiYVRoHJDQADM3n3vBZfwIUE';
-        const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`;
-        
-        let allProducts = [];
+        const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv`;
+
+        const defaultProducts = [
+            {
+                title: "OnePlus Nord CE 3 Lite 5G (Pastel Lime, 8GB RAM, 128GB Storage)",
+                category: "mobiles",
+                price: "17,999",
+                image: "https://m.media-amazon.com/images/I/61QRgOgBx0L._SL1500_.jpg",
+                link: "https://www.amazon.in/dp/B0BDNX6253"
+            },
+            {
+                title: "Apple iPhone 15 (128 GB) - Black",
+                category: "mobiles",
+                price: "71,490",
+                image: "https://m.media-amazon.com/images/I/71657TiFeHL._SL1500_.jpg",
+                link: "https://www.amazon.in/dp/B0CHX1W1XY"
+            },
+            {
+                title: "boAt Airdopes 141 Bluetooth TWS Earbuds",
+                category: "electronics",
+                price: "1,299",
+                image: "https://m.media-amazon.com/images/I/61KNJav3S9L._SL1500_.jpg",
+                link: "https://www.amazon.in/dp/B09N39R536"
+            },
+            {
+                title: "Atomic Habits by James Clear",
+                category: "books",
+                price: "480",
+                image: "https://m.media-amazon.com/images/I/81F90H7hnML._SL1500_.jpg",
+                link: "https://www.amazon.in/dp/1847941834"
+            }
+        ];
+
+        let allProducts = [...defaultProducts];
         let currentCategory = 'all';
 
         async function fetchProducts() {
@@ -209,22 +244,19 @@
                     const parsed = parseCSV(csvText);
                     if (parsed && parsed.length > 0) {
                         allProducts = parsed;
+                        renderProducts(allProducts);
                     }
                 }
             } catch (error) {
-                console.log('Error fetching Google Sheet data.');
-            } finally {
-                renderProducts(allProducts);
+                console.log('Error fetching sheet, using fallback data.');
             }
         }
 
         function parseCSV(text) {
             const lines = text.split(/\r?\n/);
             const products = [];
-            
             for (let i = 1; i < lines.length; i++) {
                 if (!lines[i].trim()) continue;
-                
                 const row = parseCSVRow(lines[i]);
                 if (row.length >= 5 && cleanText(row[0]) !== "" && cleanText(row[0]).toLowerCase() !== "title") {
                     products.push({
@@ -243,7 +275,6 @@
             const result = [];
             let current = '';
             let inQuotes = false;
-            
             for (let i = 0; i < rowText.length; i++) {
                 const char = rowText[i];
                 if (char === '"') {
@@ -268,13 +299,16 @@
             const grid = document.getElementById('productGrid');
             const noProd = document.getElementById('noProducts');
             grid.innerHTML = '';
+            
             if (products.length === 0) {
                 noProd.style.display = 'block';
                 grid.style.display = 'none';
                 return;
             }
+            
             noProd.style.display = 'none';
             grid.style.display = 'grid';
+
             products.forEach(prod => {
                 const card = document.createElement('div');
                 card.className = 'product-card';
@@ -290,7 +324,6 @@
 
         function filterCategory(category) {
             currentCategory = category;
-            
             document.querySelectorAll('.category-btn').forEach(btn => {
                 btn.classList.remove('active');
                 if (btn.innerText.toLowerCase() === category || (category === 'all' && btn.innerText === 'All')) {
@@ -306,7 +339,6 @@
 
         function applyFilters() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            
             const filtered = allProducts.filter(prod => {
                 const matchesCategory = currentCategory === 'all' || prod.category === currentCategory;
                 const matchesSearch = prod.title.toLowerCase().includes(searchTerm) || prod.category.includes(searchTerm);
@@ -315,6 +347,7 @@
             renderProducts(filtered);
         }
 
+        renderProducts(allProducts);
         fetchProducts();
     </script>
 </body>
