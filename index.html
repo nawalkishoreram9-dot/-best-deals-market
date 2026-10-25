@@ -172,6 +172,7 @@
     </style>
 </head>
 <body>
+
     <header>
         <h1>Deal Hub India</h1>
         <div class="search-container">
@@ -190,7 +191,7 @@
 
     <div class="container">
         <div id="productGrid" class="product-grid"></div>
-        <div id="noProducts" class="no-products" style="display: none;">No products found.</div>
+        <div id="noProducts" class="no-products" style="display: none;">Loading products or no products found...</div>
     </div>
 
     <footer>
@@ -200,84 +201,52 @@
 
     <script>
         const sheetId = '1fg3c7h-iTdR_EwEB5fbEiYVRoHJDQADM3n3vBZfwIUE';
-        const gvizUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json`;
+        const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`;
 
-        const defaultProducts = [
-            {
-                title: "truke TruClips 2 Open Ear Earbuds",
-                category: "electronics",
-                price: "2899",
-                image: "https://m.media-amazon.com/images/I/61KNJav3S9L._SL1500_.jpg",
-                link: "https://amzn.to/B0Dx2G3U"
-            },
-            {
-                title: "OnePlus Nord CE 3 Lite 5G (Pastel Lime, 8GB RAM, 128GB Storage)",
-                category: "mobiles",
-                price: "17,999",
-                image: "https://m.media-amazon.com/images/I/61QRgOgBx0L._SL1500_.jpg",
-                link: "https://www.amazon.in/dp/B0BDNX6253"
-            },
-            {
-                title: "Apple iPhone 15 (128 GB) - Black",
-                category: "mobiles",
-                price: "71,490",
-                image: "https://m.media-amazon.com/images/I/71657TiFeHL._SL1500_.jpg",
-                link: "https://www.amazon.in/dp/B0CHX1W1XY"
-            },
-            {
-                title: "boAt Airdopes 141 Bluetooth TWS Earbuds",
-                category: "electronics",
-                price: "1,299",
-                image: "https://m.media-amazon.com/images/I/61KNJav3S9L._SL1500_.jpg",
-                link: "https://www.amazon.in/dp/B09N39R536"
-            },
-            {
-                title: "Atomic Habits by James Clear",
-                category: "books",
-                price: "480",
-                image: "https://m.media-amazon.com/images/I/81F90H7hnML._SL1500_.jpg",
-                link: "https://www.amazon.in/dp/1847941834"
-            }
-        ];
-
-        let allProducts = [...defaultProducts];
+        let allProducts = [];
         let currentCategory = 'all';
+
+        function parseCSV(text) {
+            const lines = text.split(/\r\n|\n/);
+            const result = [];
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                
+                // Handling CSV values with quotes
+                const cells = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/^"|"$/g, '').trim());
+                
+                if (cells.length >= 5 && cells[0]) {
+                    result.push({
+                        title: cells[0],
+                        category: cells[1].toLowerCase(),
+                        price: cells[2],
+                        image: cells[3],
+                        link: cells[4]
+                    });
+                }
+            }
+            return result;
+        }
 
         async function fetchProducts() {
             try {
-                const response = await fetch(gvizUrl);
+                const response = await fetch(csvUrl);
                 if (response.ok) {
                     const text = await response.text();
-                    const jsonString = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
-                    const json = JSON.parse(jsonString);
-                    const rows = json.table.rows;
-                    
-                    if (rows && rows.length > 0) {
-                        const parsedProducts = [];
-                        rows.forEach(row => {
-                            const cells = row.c;
-                            if (cells && cells[0] && cells[0].v) {
-                                const title = String(cells[0].v || '').trim();
-                                if (title.toLowerCase() !== 'title') {
-                                    parsedProducts.push({
-                                        title: title,
-                                        category: String(cells[1] ? cells[1].v : '').toLowerCase().trim(),
-                                        price: String(cells[2] ? cells[2].v : '').trim(),
-                                        image: String(cells[3] ? cells[3].v : '').trim(),
-                                        link: String(cells[4] ? cells[4].v : '').trim()
-                                    });
-                                }
-                            }
-                        });
-
-                        if (parsedProducts.length > 0) {
-                            allProducts = parsedProducts;
-                            renderProducts(allProducts);
-                        }
+                    const parsed = parseCSV(text);
+                    if (parsed.length > 0) {
+                        allProducts = parsed;
+                        applyFilters();
+                    } else {
+                        document.getElementById('noProducts').innerText = 'No products found in Google Sheet.';
+                        document.getElementById('noProducts').style.display = 'block';
                     }
                 }
             } catch (error) {
-                console.log('Error fetching sheet, using fallback data.', error);
+                console.error('Error fetching sheet:', error);
+                document.getElementById('noProducts').innerText = 'Failed to load products from Google Sheet.';
+                document.getElementById('noProducts').style.display = 'block';
             }
         }
 
@@ -287,6 +256,7 @@
             grid.innerHTML = '';
             
             if (products.length === 0) {
+                noProd.innerText = 'No products found.';
                 noProd.style.display = 'block';
                 grid.style.display = 'none';
                 return;
@@ -299,10 +269,10 @@
                 const card = document.createElement('div');
                 card.className = 'product-card';
                 card.innerHTML = `
-                    <img src="${prod.image}" alt="${prod.title}" class="product-image" onerror="this.onerror=null; this.src='https://via.placeholder.com/200x200?text=Product+Image';">
+                    <img src="${prod.image}" alt="${prod.title}" class="product-image" onerror="this.onerror=null; this.src='https://via.placeholder.com/200x200?text=No+Image';">
                     <div class="product-title">${prod.title}</div>
                     <div class="product-price">₹${prod.price}</div>
-                    <a href="${prod.link}" target="_blank" class="buy-btn">Buy on Amazon</a>
+                    <a href="${prod.link}" target="_blank" rel="noopener noreferrer" class="buy-btn">Buy on Amazon</a>
                 `;
                 grid.appendChild(card);
             });
@@ -333,8 +303,8 @@
             renderProducts(filtered);
         }
 
-        renderProducts(allProducts);
         fetchProducts();
     </script>
+
 </body>
 </html>
