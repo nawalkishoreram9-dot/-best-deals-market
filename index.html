@@ -200,8 +200,7 @@
     </footer>
 
     <script>
-        const sheetId = '1_rEVSoI4pZ0HI0LYSaJDvZKeVyQxrtAj-Qt9btRaIRk';
-        const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`;
+        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSBiv4n4--Ia-T6SMiAgE8pXeFHyMQXVW6PAO90kDFvvLszTN73OQQ8msnyddALTL1D2pm0eQlvqEVa/pub?output=csv';
 
         let allProducts = [];
         let currentCategory = 'all';
@@ -213,7 +212,6 @@
                 const line = lines[i].trim();
                 if (!line) continue;
                 
-                // Handling CSV values with quotes
                 const cells = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/^"|"$/g, '').trim());
                 
                 if (cells.length >= 5 && cells[0]) {
