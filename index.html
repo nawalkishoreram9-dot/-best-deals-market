@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,17 +14,20 @@
             --text-color: #111111;
             --border-radius: 8px;
         }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+
         body {
             background-color: var(--background-color);
             color: var(--text-color);
             padding-bottom: 40px;
         }
+
         header {
             background-color: var(--secondary-color);
             color: white;
@@ -34,16 +38,19 @@
             top: 0;
             z-index: 1000;
         }
+
         header h1 {
             font-size: 1.8rem;
             color: var(--primary-color);
             margin-bottom: 10px;
         }
+
         .search-container {
             max-width: 600px;
             margin: 0 auto 10px auto;
             display: flex;
         }
+
         .search-container input {
             width: 100%;
             padding: 10px 15px;
@@ -52,6 +59,7 @@
             outline: none;
             font-size: 1rem;
         }
+
         .category-bar {
             display: flex;
             overflow-x: auto;
@@ -61,6 +69,7 @@
             justify-content: flex-start;
             gap: 10px;
         }
+
         .category-btn {
             background-color: transparent;
             color: white;
@@ -71,21 +80,26 @@
             font-size: 0.9rem;
             transition: all 0.3s ease;
         }
-        .category-btn.active, .category-btn:hover {
+
+        .category-btn.active,
+        .category-btn:hover {
             background-color: var(--primary-color);
             color: black;
             border-color: var(--primary-color);
         }
+
         .container {
             max-width: 1200px;
             margin: 20px auto;
             padding: 0 15px;
         }
+
         .product-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
         }
+
         .product-card {
             background-color: var(--card-background);
             border-radius: var(--border-radius);
@@ -95,9 +109,11 @@
             flex-direction: column;
             transition: transform 0.2s;
         }
+
         .product-card:hover {
             transform: translateY(-5px);
         }
+
         .product-img-container {
             width: 100%;
             height: 200px;
@@ -107,17 +123,20 @@
             justify-content: center;
             padding: 15px;
         }
+
         .product-img {
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
         }
+
         .product-info {
             padding: 15px;
             display: flex;
             flex-direction: column;
             flex-grow: 1;
         }
+
         .product-title {
             font-size: 1rem;
             font-weight: 600;
@@ -129,12 +148,14 @@
             overflow: hidden;
             height: 2.4rem;
         }
+
         .product-price {
             font-size: 1.2rem;
             font-weight: bold;
             color: #B12704;
             margin-bottom: 15px;
         }
+
         .buy-btn {
             margin-top: auto;
             background-color: var(--primary-color);
@@ -146,9 +167,11 @@
             font-weight: bold;
             transition: background-color 0.2s;
         }
+
         .buy-btn:hover {
             background-color: #f7ca00;
         }
+
         .no-products {
             grid-column: 1 / -1;
             text-align: center;
@@ -156,6 +179,7 @@
             font-size: 1.2rem;
             color: #666;
         }
+
         footer {
             background-color: var(--secondary-color);
             color: white;
@@ -171,12 +195,19 @@
     <header>
         <h1>Deal Hub India</h1>
         <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Search products..." onkeyup="filterProducts()">
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search products..."
+                onkeyup="filterProducts()"
+            >
         </div>
     </header>
 
     <div class="category-bar" id="categoryBar">
-        <button class="category-btn active" onclick="filterCategory('all')">All</button>
+        <button class="category-btn active" onclick="filterCategory('all')">
+            All
+        </button>
     </div>
 
     <div class="container">
@@ -186,38 +217,60 @@
     </div>
 
     <footer>
-        <p>Affiliate Disclosure: As an Amazon Associate, I earn from qualifying purchases. This site contains affiliate links to products on Amazon.in. If you click through and make a purchase, I may receive a small commission at no additional cost to you.</p>
-        <p style="margin-top: 10px;">&copy; 2026 Deal Hub India. All product images and trademarks belong to their respective owners.</p>
+        <p>
+            Affiliate Disclosure: As an Amazon Associate, I earn from
+            qualifying purchases. This site contains affiliate links to
+            products on Amazon.in. If you click through and make a purchase,
+            I may receive a small commission at no additional cost to you.
+        </p>
+        <p style="margin-top: 10px;">
+            &copy; 2026 Deal Hub India. All product images and trademarks
+            belong to their respective owners.
+        </p>
     </footer>
 
     <script>
-        // यहाँ नया CSV लिंक जोड़ दिया गया है
-        const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1_rEVSoI4pZ0HI0LYSaJDvZKeVyQxrtAj-Qt9btRaIRk/export?format=csv';
+        // Correct published Google Sheet CSV link
+        const SHEET_CSV_URL =
+            'https://docs.google.com/spreadsheets/d/e/2PACX-1vSBiv4n4--Ia-T6SMiAgE8pXeFHyMQXVW6PAO90kDFvvLszTN73OQQ8msnyddALTL1D2pm0eQlvqEVa/pub?output=csv';
 
         let allProducts = [];
 
         async function fetchProducts() {
             try {
                 const response = await fetch(SHEET_CSV_URL);
+
+                if (!response.ok) {
+                    throw new Error('Google Sheet could not be loaded');
+                }
+
                 const data = await response.text();
+
+                if (!data || data.trim() === '') {
+                    throw new Error('Google Sheet is empty');
+                }
+
                 parseCSV(data);
+
             } catch (error) {
                 console.error('Error fetching products:', error);
-                document.getElementById('productGrid').innerHTML = '<div class="no-products">Failed to load products from Google Sheet.</div>';
+
+                document.getElementById('productGrid').innerHTML =
+                    '<div class="no-products">Unable to load products. Please check the Google Sheet link and publishing settings.</div>';
             }
         }
 
         function parseCSV(text) {
             const lines = text.split('\n');
             const result = [];
-            
+
             for (let i = 1; i < lines.length; i++) {
                 if (!lines[i].trim()) continue;
-                
+
                 const row = [];
                 let inQuotes = false;
                 let entry = '';
-                
+
                 for (let char of lines[i]) {
                     if (char === '"') {
                         inQuotes = !inQuotes;
@@ -228,6 +281,7 @@
                         entry += char;
                     }
                 }
+
                 row.push(entry.trim());
 
                 if (row.length >= 5) {
@@ -241,17 +295,27 @@
                 }
             }
 
-            allProducts = result;
+            allProducts = result.filter(
+                product => product.title && product.title.trim() !== ''
+            );
+
             displayCategories();
             displayProducts(allProducts);
         }
 
         function displayCategories() {
-            const categories = ['all', ...new Set(allProducts.map(p => p.category))];
+            const categories = [
+                'all',
+                ...new Set(allProducts.map(p => p.category).filter(Boolean))
+            ];
+
             const categoryBar = document.getElementById('categoryBar');
-            
+
             categoryBar.innerHTML = categories.map(cat => `
-                <button class="category-btn ${cat === 'all' ? 'active' : ''}" onclick="filterCategory('${cat}')">
+                <button
+                    class="category-btn ${cat === 'all' ? 'active' : ''}"
+                    onclick="filterCategory('${cat}')"
+                >
                     ${cat.charAt(0).toUpperCase() + cat.slice(1)}
                 </button>
             `).join('');
@@ -259,41 +323,75 @@
 
         function displayProducts(products) {
             const grid = document.getElementById('productGrid');
-            
+
             if (products.length === 0) {
-                grid.innerHTML = '<div class="no-products">No products found in Google Sheet.</div>';
+                grid.innerHTML =
+                    '<div class="no-products">No products found in Google Sheet.</div>';
                 return;
             }
 
             grid.innerHTML = products.map(product => `
                 <div class="product-card">
                     <div class="product-img-container">
-                        <img src="${product.image}" alt="${product.title}" class="product-img" onerror="this.src='https://via.placeholder.com/200?text=No+Image'">
+                        <img
+                            src="${product.image}"
+                            alt="${product.title}"
+                            class="product-img"
+                            onerror="this.src='https://via.placeholder.com/200?text=No+Image'"
+                        >
                     </div>
+
                     <div class="product-info">
-                        <div class="product-title" title="${product.title}">${product.title}</div>
-                        <div class="product-price">₹${product.price}</div>
-                        <a href="${product.link}" target="_blank" class="buy-btn">View Deal</a>
+                        <div class="product-title" title="${product.title}">
+                            ${product.title}
+                        </div>
+
+                        <div class="product-price">
+                            ₹${product.price}
+                        </div>
+
+                        <a
+                            href="${product.link}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="buy-btn"
+                        >
+                            View Deal
+                        </a>
                     </div>
                 </div>
             `).join('');
         }
 
         function filterCategory(category) {
-            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+
+                if (btn.textContent.trim().toLowerCase() === category) {
+                    btn.classList.add('active');
+                }
+            });
 
             if (category === 'all') {
                 displayProducts(allProducts);
             } else {
-                const filtered = allProducts.filter(p => p.category === category);
+                const filtered = allProducts.filter(
+                    p => p.category === category
+                );
+
                 displayProducts(filtered);
             }
         }
 
         function filterProducts() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = allProducts.filter(p => p.title.toLowerCase().includes(query));
+            const query = document
+                .getElementById('searchInput')
+                .value.toLowerCase();
+
+            const filtered = allProducts.filter(p =>
+                p.title.toLowerCase().includes(query)
+            );
+
             displayProducts(filtered);
         }
 
