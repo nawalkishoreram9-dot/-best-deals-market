@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Deal Hub India - Discover the latest deals on mobiles, electronics, books, audio, fashion and more.">
+    <meta name="description" content="Deal Hub India - Discover the latest deals on mobiles, electronics, fashion, and more.">
     <meta name="theme-color" content="#131921">
     <title>Deal Hub India | Best Deals & Offers</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
         body { font-family: Arial, Helvetica, sans-serif; background: #eaeded; color: #111; line-height: 1.5; }
         button, input { font: inherit; }
         button { cursor: pointer; }
@@ -17,19 +16,17 @@
         .header { background: #131921; color: white; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.25); }
         .header-inner { width: 100%; max-width: 1400px; margin: auto; min-height: 70px; padding: 10px 15px; display: flex; align-items: center; gap: 18px; }
         
-        .logo { flex-shrink: 0; font-size: 22px; font-weight: 800; white-space: nowrap; letter-spacing: -0.5px; }
+        .logo { flex-shrink: 0; font-size: 22px; font-weight: 800; white-space: nowrap; }
         .logo span { color: #ffb000; }
-        .logo-subtitle { display: block; font-size: 10px; color: #ddd; font-weight: 400; letter-spacing: 0.5px; }
+        .logo-subtitle { display: block; font-size: 10px; color: #ddd; font-weight: 400; }
 
         .search-wrapper { flex: 1; max-width: 800px; margin: auto; position: relative; }
         .search-input { width: 100%; height: 46px; border: none; outline: none; border-radius: 5px; padding: 0 50px 0 15px; font-size: 15px; background: white; color: #111; }
         .search-input:focus { box-shadow: 0 0 0 3px #ffb000; }
         .search-icon { position: absolute; right: 0; top: 0; width: 48px; height: 46px; border: none; border-radius: 0 5px 5px 0; background: #febd69; color: #111; font-size: 20px; }
-        .search-icon:hover { background: #f3a847; }
 
         .category-section { background: #232f3e; border-top: 1px solid rgba(255,255,255,0.08); }
         .category-bar { max-width: 1400px; margin: auto; display: flex; gap: 8px; overflow-x: auto; padding: 9px 15px; scrollbar-width: thin; }
-        .category-bar::-webkit-scrollbar { height: 4px; }
         .category-button { flex-shrink: 0; border: 1px solid #5c6670; background: transparent; color: white; border-radius: 20px; padding: 7px 15px; font-size: 13px; font-weight: 600; transition: 0.2s; }
         .category-button:hover { background: #37475a; }
         .category-button.active { background: #ffb000; color: #111; border-color: #ffb000; }
@@ -56,20 +53,18 @@
         @media (min-width: 900px) { .products-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
         @media (min-width: 1200px) { .products-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
 
-        .product-card { background: white; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; min-width: 0; box-shadow: 0 1px 4px rgba(0,0,0,0.12); transition: transform 0.2s, box-shadow 0.2s; }
+        .product-card { background: white; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; min-width: 0; box-shadow: 0 1px 4px rgba(0,0,0,0.12); transition: transform 0.2s; }
         .product-card:hover { transform: translateY(-3px); box-shadow: 0 5px 18px rgba(0,0,0,0.18); }
 
         .product-image-wrapper { width: 100%; height: 220px; background: #f7f7f7; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .product-image { width: 100%; height: 100%; object-fit: contain; padding: 12px; transition: transform 0.25s; }
-        .product-card:hover .product-image { transform: scale(1.04); }
-        @media (max-width: 599px) { .product-image-wrapper { height: 170px; } }
+        .product-image { width: 100%; height: 100%; object-fit: contain; padding: 12px; }
 
         .product-info { padding: 12px; display: flex; flex-direction: column; flex: 1; }
-        .product-category { color: #666; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
+        .product-category { color: #666; font-size: 11px; text-transform: uppercase; margin-bottom: 5px; }
         .product-title { font-size: 14px; font-weight: 600; line-height: 1.4; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; min-height: 39px; margin-bottom: 10px; }
         .product-price { font-size: 20px; font-weight: 800; color: #111; margin-bottom: 12px; }
 
-        .buy-button { margin-top: auto; width: 100%; min-height: 44px; display: flex; align-items: center; justify-content: center; border: none; border-radius: 6px; background: #ffb000; color: #111; font-size: 13px; font-weight: 800; transition: 0.2s; text-decoration: none; }
+        .buy-button { margin-top: auto; width: 100%; min-height: 44px; display: flex; align-items: center; justify-content: center; border: none; border-radius: 6px; background: #ffb000; color: #111; font-size: 13px; font-weight: 800; text-decoration: none; }
         .buy-button:hover { background: #ffa000; }
 
         .loading { text-align: center; background: white; padding: 35px 15px; border-radius: 8px; margin-top: 10px; display: none; }
@@ -79,8 +74,7 @@
         .no-results { display: none; background: white; border-radius: 8px; text-align: center; padding: 50px 20px; color: #555; }
         .no-results-icon { font-size: 40px; margin-bottom: 10px; }
 
-        footer { background: #131921; color: #ddd; margin-top: 20px; padding: 30px 15px; }
-        .footer-inner { max-width: 1000px; margin: auto; text-align: center; }
+        footer { background: #131921; color: #ddd; margin-top: 20px; padding: 30px 15px; text-align: center; }
         .footer-brand { font-size: 20px; font-weight: 800; color: white; margin-bottom: 8px; }
         .footer-brand span { color: #ffb000; }
         .affiliate-disclosure { font-size: 12px; line-height: 1.7; color: #bbb; max-width: 850px; margin: 0 auto 15px; }
@@ -149,7 +143,6 @@
     </footer>
 
     <script>
-        // Updated Published CSV Link
         const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSBiv4n4--Ia-T6SMiAgE8pXeFHyMQXVW6PAO90kDFvvLszTN73OQQ8msnyddALTL1D2pm0eQlvqEVa/pub?output=csv';
         
         let allProducts = [];
@@ -290,12 +283,9 @@
                 let matchesCategory = false;
                 if (currentCategory === 'all') {
                     matchesCategory = true;
-                } else if (currentCategory === 'mobiles') {
-                    matchesCategory = pCategory.includes('mobile') || pCategory.includes('charger') || pCategory.includes('earbud') || pCategory.includes('holder');
-                } else if (currentCategory === 'electronics') {
-                    matchesCategory = pCategory.includes('electronic') || pCategory.includes('speaker') || pCategory.includes('watch') || pCategory.includes('appliance');
-                } else if (currentCategory === 'fashion') {
-                    matchesCategory = pCategory.includes('fashion') || pCategory.includes('mens') || pCategory.includes('womens') || pCategory.includes('shirt') || pCategory.includes('kurti') || pCategory.includes('saree');
+                } else {
+                    // Smart flexible matching for user's sheet entries
+                    matchesCategory = pCategory.includes(currentCategory);
                 }
 
                 let matchesSubcategory = true;
