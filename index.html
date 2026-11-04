@@ -149,8 +149,8 @@
     </footer>
 
     <script>
-        // Google Sheet Published CSV Link
-        const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbIv4nA-Ia-16SWaAgE8pxFtyMQKWWkPA090k0FvvLaz7N730Qg8esnyoidALT-102pm0wQIvqEVa/pub?output=csv';
+        // Updated Published CSV Link
+        const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSBiv4n4--Ia-T6SMiAgE8pXeFHyMQXVW6PAO90kDFvvLszTN73OQQ8msnyddALTL1D2pm0eQlvqEVa/pub?output=csv';
         
         let allProducts = [];
         let currentCategory = 'all';
@@ -287,7 +287,6 @@
                 const pCategory = p.category || '';
                 const pTitle = p.title || '';
 
-                // Category match logic
                 let matchesCategory = false;
                 if (currentCategory === 'all') {
                     matchesCategory = true;
@@ -299,13 +298,11 @@
                     matchesCategory = pCategory.includes('fashion') || pCategory.includes('mens') || pCategory.includes('womens') || pCategory.includes('shirt') || pCategory.includes('kurti') || pCategory.includes('saree');
                 }
 
-                // Subcategory match
                 let matchesSubcategory = true;
                 if (currentSubcategory !== 'all') {
                     matchesSubcategory = pCategory.includes(currentSubcategory);
                 }
 
-                // Search query match
                 let matchesSearch = true;
                 if (currentSearchQuery !== '') {
                     matchesSearch = pTitle.toLowerCase().includes(currentSearchQuery) || pCategory.includes(currentSearchQuery);
@@ -339,7 +336,6 @@
             }
         }
 
-        // Initialize
         fetchProducts();
     </script>
 </body>
