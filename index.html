@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Deal Hub India - Discover the latest deals on mobiles, electronics, fashion, and more.">
+    <meta name="description" content="Deal Hub India - Discover the latest deals on mobiles, electronics, books, audio, fashion and more.">
     <meta name="theme-color" content="#131921">
     <title>Deal Hub India | Best Deals & Offers</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
         body { font-family: Arial, Helvetica, sans-serif; background: #eaeded; color: #111; line-height: 1.5; }
         button, input { font: inherit; }
         button { cursor: pointer; }
@@ -30,12 +31,6 @@
         .category-button { flex-shrink: 0; border: 1px solid #5c6670; background: transparent; color: white; border-radius: 20px; padding: 7px 15px; font-size: 13px; font-weight: 600; transition: 0.2s; }
         .category-button:hover { background: #37475a; }
         .category-button.active { background: #ffb000; color: #111; border-color: #ffb000; }
-
-        .subcat-section { background: #1a222c; border-top: 1px solid rgba(255,255,255,0.05); display: none; }
-        .subcat-bar { max-width: 1400px; margin: auto; display: flex; gap: 6px; overflow-x: auto; padding: 6px 15px; scrollbar-width: thin; }
-        .subcat-button { flex-shrink: 0; border: 1px solid #48535f; background: transparent; color: #ccc; border-radius: 15px; padding: 4px 12px; font-size: 12px; transition: 0.2s; }
-        .subcat-button:hover { background: #2c3848; color: white; }
-        .subcat-button.active { background: #ffa000; color: #111; border-color: #ffa000; font-weight: 700; }
 
         .main { width: 100%; max-width: 1400px; margin: auto; padding: 20px 15px 40px; }
         
@@ -90,7 +85,7 @@
                 <span class="logo-subtitle">UNC Smart Tool Kit</span>
             </a>
             <div class="search-wrapper">
-                <input type="text" id="searchInput" class="search-input" placeholder="Search mobiles, electronics, fashion, deals...">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search products, mobiles, electronics, fashion...">
                 <button class="search-icon" aria-label="Search">🔍</button>
             </div>
         </div>
@@ -103,10 +98,6 @@
             <button class="category-button" data-category="electronics">Electronics</button>
             <button class="category-button" data-category="fashion">Fashion</button>
         </div>
-    </div>
-
-    <div class="subcat-section" id="subcatSection">
-        <div class="subcat-bar" id="subcatBar"></div>
     </div>
 
     <main class="main">
@@ -147,33 +138,7 @@
         
         let allProducts = [];
         let currentCategory = 'all';
-        let currentSubcategory = 'all';
         let currentSearchQuery = '';
-
-        const subcategoriesData = {
-            mobiles: [
-                { id: 'all', name: 'All Mobiles' },
-                { id: 'fast-chargers', name: 'Fast Chargers' },
-                { id: 'tws-earbuds', name: 'Earbuds & TWS' },
-                { id: 'bike-mobile-holders', name: 'Holders & Mounts' },
-                { id: 'powerbanks', name: 'Power Banks' }
-            ],
-            electronics: [
-                { id: 'all', name: 'All Electronics' },
-                { id: 'bluetooth-speakers', name: 'Speakers' },
-                { id: 'smartwatches', name: 'Smartwatches' },
-                { id: 'home-appliances', name: 'Trimmers & Gadgets' }
-            ],
-            fashion: [
-                { id: 'all', name: 'All Fashion' },
-                { id: 'mens-tshirts', name: "Men's T-Shirts" },
-                { id: 'mens-shirts', name: "Men's Shirts" },
-                { id: 'mens-jeans', name: "Men's Jeans" },
-                { id: 'womens-kurtis', name: "Women's Kurtis" },
-                { id: 'womens-sarees', name: "Women's Sarees" },
-                { id: 'womens-dresses', name: "Women's Dresses" }
-            ]
-        };
 
         const productsGrid = document.getElementById('productsGrid');
         const loadingIndicator = document.getElementById('loadingIndicator');
@@ -181,8 +146,6 @@
         const productCount = document.getElementById('productCount');
         const searchInput = document.getElementById('searchInput');
         const categoryBar = document.getElementById('categoryBar');
-        const subcatSection = document.getElementById('subcatSection');
-        const subcatBar = document.getElementById('subcatBar');
 
         function parseCSV(text) {
             const lines = text.split('\n');
@@ -242,33 +205,8 @@
             e.target.classList.add('active');
 
             currentCategory = e.target.getAttribute('data-category');
-            currentSubcategory = 'all';
-
-            renderSubcategories(currentCategory);
             filterAndRenderProducts();
         });
-
-        function renderSubcategories(category) {
-            if (subcategoriesData[category]) {
-                subcatSection.style.display = 'block';
-                subcatBar.innerHTML = '';
-                subcategoriesData[category].forEach(sub => {
-                    const btn = document.createElement('button');
-                    btn.className = `subcat-button ${sub.id === 'all' ? 'active' : ''}`;
-                    btn.textContent = sub.name;
-                    btn.setAttribute('data-sub', sub.id);
-                    btn.onclick = () => {
-                        document.querySelectorAll('.subcat-button').forEach(b => b.classList.remove('active'));
-                        btn.classList.add('active');
-                        currentSubcategory = sub.id;
-                        filterAndRenderProducts();
-                    };
-                    subcatBar.appendChild(btn);
-                });
-            } else {
-                subcatSection.style.display = 'none';
-            }
-        }
 
         searchInput.addEventListener('input', (e) => {
             currentSearchQuery = e.target.value.toLowerCase().trim();
@@ -280,25 +218,10 @@
                 const pCategory = p.category || '';
                 const pTitle = p.title || '';
 
-                let matchesCategory = false;
-                if (currentCategory === 'all') {
-                    matchesCategory = true;
-                } else {
-                    // Smart flexible matching for user's sheet entries
-                    matchesCategory = pCategory.includes(currentCategory);
-                }
+                let matchesCategory = (currentCategory === 'all') || pCategory.includes(currentCategory);
+                let matchesSearch = (currentSearchQuery === '') || pTitle.toLowerCase().includes(currentSearchQuery) || pCategory.includes(currentSearchQuery);
 
-                let matchesSubcategory = true;
-                if (currentSubcategory !== 'all') {
-                    matchesSubcategory = pCategory.includes(currentSubcategory);
-                }
-
-                let matchesSearch = true;
-                if (currentSearchQuery !== '') {
-                    matchesSearch = pTitle.toLowerCase().includes(currentSearchQuery) || pCategory.includes(currentSearchQuery);
-                }
-
-                return matchesCategory && matchesSubcategory && matchesSearch;
+                return matchesCategory && matchesSearch;
             });
 
             productCount.textContent = `Showing ${filtered.length} products`;
