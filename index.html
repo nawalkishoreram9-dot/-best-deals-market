@@ -1,257 +1,527 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Deal Hub India - Discover the latest deals on mobiles, electronics, fashion, and more.">
-    <meta name="theme-color" content="#131921">
-    <title>Deal Hub India | Best Deals & Offers</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body { font-family: Arial, Helvetica, sans-serif; background: #eaeded; color: #111; line-height: 1.5; }
-        button, input { font: inherit; }
-        button { cursor: pointer; }
-        a { text-decoration: none; color: inherit; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deal Hub India - Best Deals & Offers</title>
+<style>
+:root {
+    --primary-color:#ff9900;
+    --secondary-color:#131921;
+    --background-color:#f3f3f3;
+    --card-background:#fff;
+    --text-color:#111;
+    --border-radius:8px;
+}
+* {
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+}
+body {
+    background:var(--background-color);
+    color:var(--text-color);
+    padding-bottom:40px;
+}
+header {
+    background:var(--secondary-color);
+    color:white;
+    padding:15px 20px;
+    text-align:center;
+    box-shadow:0 2px 5px rgba(0,0,0,.2);
+    position:sticky;
+    top:0;
+    z-index:1000;
+}
+header h1 {
+    font-size:1.8rem;
+    color:var(--primary-color);
+    margin-bottom:10px;
+}
+.search-container {
+    max-width:600px;
+    margin:0 auto 10px;
+}
+.search-container input {
+    width:100%;
+    padding:10px 15px;
+    border:0;
+    border-radius:4px;
+    outline:none;
+    font-size:1rem;
+}
+.category-bar {
+    display:flex;
+    overflow-x:auto;
+    white-space:nowrap;
+    background:#232f3e;
+    padding:10px;
+    gap:8px;
+    scrollbar-width:thin;
+}
+.category-btn {
+    background:transparent;
+    color:white;
+    border:1px solid #485769;
+    padding:6px 15px;
+    border-radius:20px;
+    cursor:pointer;
+    font-size:.9rem;
+    flex-shrink:0;
+}
+.category-btn.active,
+.category-btn:hover {
+    background:var(--primary-color);
+    color:black;
+    border-color:var(--primary-color);
+    font-weight:600;
+}
 
-        .header { background: #131921; color: white; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.25); }
-        .header-inner { width: 100%; max-width: 1400px; margin: auto; min-height: 70px; padding: 10px 15px; display: flex; align-items: center; gap: 18px; }
-        
-        .logo { flex-shrink: 0; font-size: 22px; font-weight: 800; white-space: nowrap; }
-        .logo span { color: #ffb000; }
-        .logo-subtitle { display: block; font-size: 10px; color: #ddd; font-weight: 400; }
+/* Sub-category styling */
+.subcat-bar {
+    display:none;
+    overflow-x:auto;
+    white-space:nowrap;
+    background:#1a222c;
+    padding:8px 10px;
+    gap:6px;
+    border-top:1px solid rgba(255,255,255,0.08);
+}
+.subcat-btn {
+    background:transparent;
+    color:#ccc;
+    border:1px solid #3a4756;
+    padding:4px 12px;
+    border-radius:15px;
+    cursor:pointer;
+    font-size:.8rem;
+    flex-shrink:0;
+}
+.subcat-btn.active,
+.subcat-btn:hover {
+    background:#ffa000;
+    color:#111;
+    border-color:#ffa000;
+    font-weight:700;
+}
 
-        .search-wrapper { flex: 1; max-width: 800px; margin: auto; position: relative; }
-        .search-input { width: 100%; height: 46px; border: none; outline: none; border-radius: 5px; padding: 0 50px 0 15px; font-size: 15px; background: white; color: #111; }
-        .search-input:focus { box-shadow: 0 0 0 3px #ffb000; }
-        .search-icon { position: absolute; right: 0; top: 0; width: 48px; height: 46px; border: none; border-radius: 0 5px 5px 0; background: #febd69; color: #111; font-size: 20px; }
-
-        .category-section { background: #232f3e; border-top: 1px solid rgba(255,255,255,0.08); }
-        .category-bar { max-width: 1400px; margin: auto; display: flex; gap: 8px; overflow-x: auto; padding: 9px 15px; scrollbar-width: thin; }
-        .category-button { flex-shrink: 0; border: 1px solid #5c6670; background: transparent; color: white; border-radius: 20px; padding: 7px 15px; font-size: 13px; font-weight: 600; transition: 0.2s; }
-        .category-button:hover { background: #37475a; }
-        .category-button.active { background: #ffb000; color: #111; border-color: #ffb000; }
-
-        .main { width: 100%; max-width: 1400px; margin: auto; padding: 20px 15px 40px; }
-        
-        .hero { background: linear-gradient(135deg, #131921, #232f3e); color: white; border-radius: 10px; padding: 28px 22px; margin-bottom: 22px; box-shadow: 0 3px 10px rgba(0,0,0,0.12); }
-        .hero h1 { font-size: clamp(25px, 5vw, 38px); margin-bottom: 7px; }
-        .hero h1 span { color: #ffb000; }
-        .hero p { color: #ddd; font-size: 14px; max-width: 700px; }
-
-        .products-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; gap: 10px; }
-        .products-header h2 { font-size: 21px; }
-        .product-count { font-size: 13px; color: #555; }
-
-        .products-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-        @media (min-width: 600px) { .products-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 15px; } }
-        @media (min-width: 900px) { .products-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-        @media (min-width: 1200px) { .products-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
-
-        .product-card { background: white; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; min-width: 0; box-shadow: 0 1px 4px rgba(0,0,0,0.12); transition: transform 0.2s; }
-        .product-card:hover { transform: translateY(-3px); box-shadow: 0 5px 18px rgba(0,0,0,0.18); }
-
-        .product-image-wrapper { width: 100%; height: 220px; background: #f7f7f7; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .product-image { width: 100%; height: 100%; object-fit: contain; padding: 12px; }
-
-        .product-info { padding: 12px; display: flex; flex-direction: column; flex: 1; }
-        .product-category { color: #666; font-size: 11px; text-transform: uppercase; margin-bottom: 5px; }
-        .product-title { font-size: 14px; font-weight: 600; line-height: 1.4; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; min-height: 39px; margin-bottom: 10px; }
-        .product-price { font-size: 20px; font-weight: 800; color: #111; margin-bottom: 12px; }
-
-        .buy-button { margin-top: auto; width: 100%; min-height: 44px; display: flex; align-items: center; justify-content: center; border: none; border-radius: 6px; background: #ffb000; color: #111; font-size: 13px; font-weight: 800; text-decoration: none; }
-        .buy-button:hover { background: #ffa000; }
-
-        .loading { text-align: center; background: white; padding: 35px 15px; border-radius: 8px; margin-top: 10px; display: none; }
-        .spinner { width: 30px; height: 30px; border: 4px solid #ddd; border-top-color: #ffb000; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 10px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .no-results { display: none; background: white; border-radius: 8px; text-align: center; padding: 50px 20px; color: #555; }
-        .no-results-icon { font-size: 40px; margin-bottom: 10px; }
-
-        footer { background: #131921; color: #ddd; margin-top: 20px; padding: 30px 15px; text-align: center; }
-        .footer-brand { font-size: 20px; font-weight: 800; color: white; margin-bottom: 8px; }
-        .footer-brand span { color: #ffb000; }
-        .affiliate-disclosure { font-size: 12px; line-height: 1.7; color: #bbb; max-width: 850px; margin: 0 auto 15px; }
-        .copyright { font-size: 11px; color: #888; }
-    </style>
+.container {
+    max-width:1200px;
+    margin:20px auto;
+    padding:0 15px;
+}
+.product-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+    gap:20px;
+}
+.product-card {
+    background:var(--card-background);
+    border-radius:var(--border-radius);
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    transition:transform 0.2s;
+}
+.product-card:hover {
+    transform:translateY(-3px);
+}
+.product-img-container {
+    width:100%;
+    height:200px;
+    background:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:15px;
+    position:relative;
+}
+.product-img {
+    max-width:100%;
+    max-height:100%;
+    object-fit:contain;
+}
+.img-fallback {
+    color:#777;
+    font-size:0.85rem;
+    text-align:center;
+    padding:10px;
+    background:#f0f0f0;
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:4px;
+}
+.product-info {
+    padding:15px;
+    display:flex;
+    flex-direction:column;
+    flex-grow:1;
+}
+.product-category-tag {
+    font-size:0.75rem;
+    color:#666;
+    text-transform:uppercase;
+    margin-bottom:4px;
+}
+.product-title {
+    font-size:1rem;
+    font-weight:600;
+    margin-bottom:10px;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+    min-height:2.4rem;
+}
+.product-price {
+    font-size:1.2rem;
+    font-weight:bold;
+    color:#B12704;
+    margin-bottom:15px;
+}
+.buy-btn {
+    margin-top:auto;
+    background:var(--primary-color);
+    color:#111;
+    text-align:center;
+    padding:10px;
+    border-radius:4px;
+    text-decoration:none;
+    font-weight:bold;
+}
+.no-products {
+    grid-column:1/-1;
+    text-align:center;
+    padding:40px 15px;
+    font-size:1rem;
+    color:#666;
+    line-height:1.6;
+}
+footer {
+    background:var(--secondary-color);
+    color:white;
+    text-align:center;
+    padding:20px;
+    margin-top:40px;
+    font-size:.85rem;
+    line-height:1.6;
+}
+</style>
 </head>
 <body>
 
-    <header class="header">
-        <div class="header-inner">
-            <a href="#" class="logo">
-                Deal Hub <span>India</span>
-                <span class="logo-subtitle">UNC Smart Tool Kit</span>
-            </a>
-            <div class="search-wrapper">
-                <input type="text" id="searchInput" class="search-input" placeholder="Search products, mobiles, electronics, fashion...">
-                <button class="search-icon" aria-label="Search">🔍</button>
+<header>
+    <h1>Deal Hub India</h1>
+    <div class="search-container">
+        <input type="text" id="searchInput"
+        placeholder="Search products, brands, categories..." oninput="filterProducts()">
+    </div>
+</header>
+
+<div class="category-bar" id="categoryBar">
+    <button class="category-btn active" onclick="filterCategory('all',this)">All</button>
+</div>
+
+<!-- Sub-category Bar -->
+<div class="subcat-bar" id="subcatBar"></div>
+
+<div class="container">
+    <div class="product-grid" id="productGrid">
+        <div class="no-products">Loading products...</div>
+    </div>
+</div>
+
+<footer>
+    <p>Affiliate Disclosure: As an Amazon Associate, I earn from qualifying purchases. This site contains affiliate links to products on Amazon.in. If you click through and make a purchase, I may receive a small commission at no additional cost to you.</p>
+    <p style="margin-top:10px;">&copy; 2026 Deal Hub India. All product images and trademarks belong to their respective owners.</p>
+</footer>
+
+<script>
+const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSBiv4n4--Ia-T6SMiAgE8pXeFHyMQXVW6PAO90kDFvvLszTN73OQQ8msnyddALTL1D2pm0eQlvqEVa/pub?output=csv';
+
+let allProducts = [];
+let currentCategory = 'all';
+let currentSubcategory = 'all';
+
+// Amazon-style Sub-categories Map
+const subcategoriesData = {
+    mobiles: [
+        { id: 'all', name: 'All Mobiles' },
+        { id: 'charger', name: 'Fast Chargers' },
+        { id: 'earbud', name: 'Earbuds & TWS' },
+        { id: 'holder', name: 'Holders & Mounts' },
+        { id: 'powerbank', name: 'Power Banks' }
+    ],
+    electronics: [
+        { id: 'all', name: 'All Electronics' },
+        { id: 'speaker', name: 'Speakers' },
+        { id: 'smartwatch', name: 'Smartwatches' },
+        { id: 'trimmer', name: 'Trimmers & Gadgets' }
+    ],
+    fashion: [
+        { id: 'all', name: 'All Fashion' },
+        { id: 'tshirt', name: "T-Shirts" },
+        { id: 'shirt', name: "Shirts" },
+        { id: 'jeans', name: "Jeans" },
+        { id: 'kurti', name: "Kurtis & Sarees" }
+    ]
+};
+
+function parseCSV(text) {
+    const rows = [];
+    let row = [];
+    let field = '';
+    let inQuotes = false;
+
+    text = text.replace(/^\uFEFF/, '');
+
+    for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const next = text[i + 1];
+
+        if (char === '"') {
+            if (inQuotes && next === '"') {
+                field += '"';
+                i++;
+            } else {
+                inQuotes = !inQuotes;
+            }
+        } else if (char === ',' && !inQuotes) {
+            row.push(field.trim());
+            field = '';
+        } else if ((char === '\n' || char === '\r') && !inQuotes) {
+            if (char === '\r' && next === '\n') i++;
+            row.push(field.trim());
+
+            if (row.some(cell => cell !== '')) {
+                rows.push(row);
+            }
+
+            row = [];
+            field = '';
+        } else {
+            field += char;
+        }
+    }
+
+    row.push(field.trim());
+    if (row.some(cell => cell !== '')) {
+        rows.push(row);
+    }
+    return rows;
+}
+
+async function fetchProducts() {
+    const grid = document.getElementById('productGrid');
+
+    try {
+        const response = await fetch(SHEET_CSV_URL, { cache: 'no-store' });
+
+        if (!response.ok) {
+            throw new Error('Google returned HTTP ' + response.status);
+        }
+
+        const csvText = await response.text();
+
+        if (csvText.trim().startsWith('<!DOCTYPE') || csvText.trim().startsWith('<html')) {
+            throw new Error('Google Sheet returned a webpage instead of CSV. Check Publish to web settings.');
+        }
+
+        const rows = parseCSV(csvText);
+
+        if (rows.length < 2) {
+            throw new Error('CSV opened, but no product row was found.');
+        }
+
+        const headers = rows[0].map(h => h.replace(/^"|"$/g, '').trim().toLowerCase());
+
+        const titleIndex = headers.indexOf('title');
+        const categoryIndex = headers.indexOf('category');
+        const priceIndex = headers.indexOf('price');
+        const imageIndex = headers.indexOf('image');
+        const linkIndex = headers.indexOf('link');
+
+        if ([titleIndex, categoryIndex, priceIndex, imageIndex, linkIndex].some(i => i === -1)) {
+            throw new Error('Column headings must be: title, category, price, image, link.');
+        }
+
+        allProducts = rows.slice(1).map(row => ({
+            title: (row[titleIndex] || '').trim(),
+            category: (row[categoryIndex] || '').trim().toLowerCase(),
+            price: (row[priceIndex] || '').trim(),
+            image: (row[imageIndex] || '').trim(),
+            link: (row[linkIndex] || '').trim()
+        })).filter(p => p.title && p.link);
+
+        if (allProducts.length === 0) {
+            throw new Error('CSV loaded, but no valid product rows were found.');
+        }
+
+        displayCategories();
+        displayProducts(allProducts);
+
+    } catch (error) {
+        console.error('Product loading error:', error);
+        grid.innerHTML = `
+            <div class="no-products">
+                <strong>Products could not be loaded.</strong><br>
+                ${escapeHTML(error.message)}<br><br>
+                Please check the Google Sheet CSV link and column headings.
+            </div>
+        `;
+    }
+}
+
+function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, char => ({
+        '&':'&amp;',
+        '<':'&lt;',
+        '>':'&gt;',
+        '"':'&quot;',
+        "'":'&#39;'
+    })[char]);
+}
+
+function displayCategories() {
+    const defaultCategories = [
+        'all',
+        'mobiles',
+        'electronics',
+        'fashion',
+        'home & kitchen',
+        'appliances',
+        'beauty',
+        'books',
+        'sports',
+        'toys & baby',
+        'grocery',
+        'automotive'
+    ];
+
+    const sheetCategories = allProducts.map(p => p.category).filter(Boolean);
+    const combinedCategories = Array.from(new Set([...defaultCategories, ...sheetCategories]));
+
+    const bar = document.getElementById('categoryBar');
+
+    bar.innerHTML = combinedCategories.map(cat => {
+        const displayName = cat === 'all' 
+            ? 'All' 
+            : cat.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+
+        return `
+        <button class="category-btn ${cat === currentCategory ? 'active' : ''}"
+        onclick="filterCategory('${escapeHTML(cat)}',this)">
+            ${escapeHTML(displayName)}
+        </button>
+        `;
+    }).join('');
+}
+
+function renderSubcategories(cat) {
+    const subcatBar = document.getElementById('subcatBar');
+    if (subcategoriesData[cat]) {
+        subcatBar.style.display = 'flex';
+        subcatBar.innerHTML = subcategoriesData[cat].map(sub => `
+            <button class="subcat-btn ${sub.id === currentSubcategory ? 'active' : ''}"
+            onclick="filterSubcategory('${sub.id}', this)">
+                ${escapeHTML(sub.name)}
+            </button>
+        `).join('');
+    } else {
+        subcatBar.style.display = 'none';
+    }
+}
+
+function handleImageError(imgElement) {
+    const container = imgElement.parentElement;
+    container.innerHTML = `<div class="img-fallback">Product Image</div>`;
+}
+
+function displayProducts(products) {
+    const grid = document.getElementById('productGrid');
+
+    if (!products.length) {
+        grid.innerHTML = '<div class="no-products">No products found in this selection.</div>';
+        return;
+    }
+
+    grid.innerHTML = products.map(product => {
+        const title = escapeHTML(product.title);
+        const price = escapeHTML(product.price);
+        const image = escapeHTML(product.image);
+        const link = escapeHTML(product.link);
+        const category = escapeHTML(product.category);
+
+        return `
+        <div class="product-card">
+            <div class="product-img-container">
+                ${image ? `<img src="${image}" alt="${title}" class="product-img"
+                onerror="handleImageError(this)">` : '<div class="img-fallback">Product Image</div>'}
+            </div>
+            <div class="product-info">
+                <div class="product-category-tag">${category}</div>
+                <div class="product-title" title="${title}">${title}</div>
+                <div class="product-price">₹${price}</div>
+                <a href="${link}" target="_blank"
+                rel="noopener noreferrer" class="buy-btn">View Deal</a>
             </div>
         </div>
-    </header>
+        `;
+    }).join('');
+}
 
-    <div class="category-section">
-        <div class="category-bar" id="categoryBar">
-            <button class="category-button active" data-category="all">All Deals</button>
-            <button class="category-button" data-category="mobiles">Mobiles</button>
-            <button class="category-button" data-category="electronics">Electronics</button>
-            <button class="category-button" data-category="fashion">Fashion</button>
-            <button class="category-button" data-category="home">Home & Kitchen</button>
-            <button class="category-button" data-category="books">Books & More</button>
-        </div>
-    </div>
+function filterCategory(category, button) {
+    currentCategory = category;
+    currentSubcategory = 'all';
 
-    <main class="main">
-        <section class="hero">
-            <h1>Best Deals & <span>Offers</span></h1>
-            <p>Discover handpicked trending products, daily discounts, and top-rated gadgets across India.</p>
-        </section>
+    document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+    if (button) button.classList.add('active');
 
-        <div class="products-header">
-            <h2>Trending Products</h2>
-            <span class="product-count" id="productCount">Loading products...</span>
-        </div>
+    renderSubcategories(category);
+    applyFilters();
+}
 
-        <div class="loading" id="loadingIndicator">
-            <div class="spinner"></div>
-            <p>Loading best deals for you...</p>
-        </div>
+function filterSubcategory(subId, button) {
+    currentSubcategory = subId;
 
-        <div class="no-results" id="noResults">
-            <div class="no-results-icon">🔍</div>
-            <h3>No products found</h3>
-            <p>Try searching for something else or select a different category.</p>
-        </div>
+    document.querySelectorAll('.subcat-btn').forEach(btn => btn.classList.remove('active'));
+    if (button) button.classList.add('active');
 
-        <div class="products-grid" id="productsGrid"></div>
-    </main>
+    applyFilters();
+}
 
-    <footer>
-        <div class="footer-inner">
-            <div class="footer-brand">Deal Hub <span>India</span></div>
-            <p class="affiliate-disclosure"><strong>Disclaimer:</strong> As an Amazon Associate, we earn from qualifying purchases. Prices and availability are subject to change.</p>
-            <p class="copyright">&copy; 2026 Deal Hub India. All rights reserved.</p>
-        </div>
-    </footer>
+function filterProducts() {
+    applyFilters();
+}
 
-    <script>
-        const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSBiv4n4--Ia-T6SMiAgE8pXeFHyMQXVW6PAO90kDFvvLszTN73OQQ8msnyddALTL1D2pm0eQlvqEVa/pub?output=csv';
+function applyFilters() {
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    const filtered = allProducts.filter(p => {
+        const catMatch = currentCategory === 'all' || p.category.includes(currentCategory);
         
-        let allProducts = [];
-        let currentCategory = 'all';
-        let currentSearchQuery = '';
-
-        const productsGrid = document.getElementById('productsGrid');
-        const loadingIndicator = document.getElementById('loadingIndicator');
-        const noResults = document.getElementById('noResults');
-        const productCount = document.getElementById('productCount');
-        const searchInput = document.getElementById('searchInput');
-        const categoryBar = document.getElementById('categoryBar');
-
-        function parseCSV(text) {
-            const lines = text.split('\n');
-            const result = [];
-            for (let i = 1; i < lines.length; i++) {
-                const line = lines[i].trim();
-                if (!line) continue;
-                
-                const row = [];
-                let insideQuote = false;
-                let entry = '';
-                
-                for (let char of line) {
-                    if (char === '"') {
-                        insideQuote = !insideQuote;
-                    } else if (char === ',' && !insideQuote) {
-                        row.push(entry.trim());
-                        entry = '';
-                    } else {
-                        entry += char;
-                    }
-                }
-                row.push(entry.trim());
-                
-                if (row.length >= 5) {
-                    result.push({
-                        title: row[0].replace(/^"|"$/g, ''),
-                        category: row[1].replace(/^"|"$/g, '').toLowerCase(),
-                        price: row[2].replace(/^"|"$/g, ''),
-                        image: row[3].replace(/^"|"$/g, ''),
-                        link: row[4].replace(/^"|"$/g, '')
-                    });
-                }
-            }
-            return result;
+        let subMatch = true;
+        if (currentSubcategory !== 'all') {
+            subMatch = p.title.toLowerCase().includes(currentSubcategory) || p.category.includes(currentSubcategory);
         }
 
-        async function fetchProducts() {
-            loadingIndicator.style.display = 'block';
-            try {
-                const response = await fetch(SHEET_CSV_URL);
-                const csvData = await response.text();
-                allProducts = parseCSV(csvData);
-                loadingIndicator.style.display = 'none';
-                filterAndRenderProducts();
-            } catch (error) {
-                console.error("Error loading products:", error);
-                loadingIndicator.style.display = 'none';
-                noResults.style.display = 'block';
-            }
+        let queryMatch = true;
+        if (query !== '') {
+            queryMatch = p.title.toLowerCase().includes(query) || p.category.toLowerCase().includes(query);
         }
 
-        categoryBar.addEventListener('click', (e) => {
-            if (!e.target.classList.contains('category-button')) return;
-            
-            document.querySelectorAll('.category-button').forEach(btn => btn.classList.remove('active'));
-            e.target.classList.add('active');
+        return catMatch && subMatch && queryMatch;
+    });
 
-            currentCategory = e.target.getAttribute('data-category');
-            filterAndRenderProducts();
-        });
+    displayProducts(filtered);
+}
 
-        searchInput.addEventListener('input', (e) => {
-            currentSearchQuery = e.target.value.toLowerCase().trim();
-            filterAndRenderProducts();
-        });
-
-        function filterAndRenderProducts() {
-            let filtered = allProducts.filter(p => {
-                const pCategory = p.category || '';
-                const pTitle = p.title || '';
-
-                let matchesCategory = (currentCategory === 'all') || pCategory.includes(currentCategory);
-                let matchesSearch = (currentSearchQuery === '') || pTitle.toLowerCase().includes(currentSearchQuery) || pCategory.includes(currentSearchQuery);
-
-                return matchesCategory && matchesSearch;
-            });
-
-            productCount.textContent = `Showing ${filtered.length} products`;
-
-            if (filtered.length === 0) {
-                productsGrid.style.display = 'none';
-                noResults.style.display = 'block';
-            } else {
-                noResults.style.display = 'none';
-                productsGrid.style.display = 'grid';
-                
-                productsGrid.innerHTML = filtered.map(p => `
-                    <div class="product-card">
-                        <div class="product-image-wrapper">
-                            <img src="${p.image}" alt="${p.title}" class="product-image" loading="lazy" onerror="this.src='https://via.placeholder.com/200?text=Product+Image'">
-                        </div>
-                        <div class="product-info">
-                            <div class="product-category">${p.category}</div>
-                            <div class="product-title">${p.title}</div>
-                            <div class="product-price">₹${p.price}</div>
-                            <a href="${p.link}" target="_blank" rel="noopener noreferrer" class="buy-button">Check Deal on Amazon</a>
-                        </div>
-                    </div>
-                `).join('');
-            }
-        }
-
-        fetchProducts();
-    </script>
+fetchProducts();
+</script>
 </body>
 </html>
